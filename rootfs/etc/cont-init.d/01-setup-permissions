@@ -3,14 +3,17 @@
 
 # create configuration directory
 mkdir -p "${CONFIG_DIR}/qBittorrent"
+mkdir -p "${CONFIG_DIR}/nzbget"
 mkdir -p "${QBT_SAVE_PATH}"
 
 # set permissions on configuration directory
 echo "${CONFIG_DIR}/qBittorrent true ${PUID}:${PGID} 0600 0700" | fix-attrs
+echo "${CONFIG_DIR}/nzbget true ${PUID}:${PGID} 0600 0700" | fix-attrs
 echo "${CONFIG_DIR}/openvpn true openvpn:openvpn 0600 0700" | fix-attrs
 
 # set ownership on download directory
 chown -R "${PUID}:${PGID}" "${QBT_SAVE_PATH}"
+chown "${PUID}:${PGID}" /usr/bin/nzbget/nzbget.conf
 
 # set permissions on copied scripts
 chmod 755 /usr/sbin/*

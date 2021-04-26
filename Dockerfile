@@ -1,5 +1,5 @@
 
-ARG BASE_IMAGE="alpine:3.12"
+ARG BASE_IMAGE="alpine:3.13"
 # uncomment below to enable qbittorrent search engine
 # ARG BASE_IMAGE="python:3-alpine3.12"
 
@@ -12,12 +12,12 @@ ARG VCS_REF
 ARG VERSION
 
 LABEL org.label-schema.build-date=$BUILD_DATE \
-    org.label-schema.name="alpine-qbittorrent-openvpn" \
-    org.label-schema.description="qBittorrent docker container with OpenVPN client running as unprivileged user on alpine linux" \
-    org.label-schema.url="https://guillaumedsde.gitlab.io/alpine-qbittorrent-openvpn/" \
+    org.label-schema.name="alpine-qbit-nzb-openvpn" \
+    org.label-schema.description="qBittorrent/nzbget docker container with OpenVPN client running as unprivileged user on alpine linux" \
+    org.label-schema.url="https://github.com/riboyama/alpine-qbit-nzb-openvpn" \
     org.label-schema.vcs-ref=$VCS_REF \
-    org.label-schema.vcs-url="https://github.com/guillaumedsde/alpine-qbittorrent-openvpn" \
-    org.label-schema.vendor="guillaumedsde" \
+    org.label-schema.vcs-url="https://github.com/riboyama/alpine-qbit-nzb-openvpn" \
+    org.label-schema.vendor="riboyama" \
     org.label-schema.version=$VERSION \
     org.label-schema.schema-version="1.0"
 
@@ -44,7 +44,8 @@ RUN addgroup -S openvpn \
     && setcap cap_net_admin+ep "$(which openvpn)" \
     && apk del libcap --purge \
     && echo "openvpn ALL=(ALL)  NOPASSWD: /sbin/ip" >> /etc/sudoers \
-    && /bin/sh /usr/sbin/install_qbittorrent.sh
+    && /bin/sh /usr/sbin/install_qbittorrent.sh \
+    && /bin/sh /usr/sbin/install_nzbget.sh
 
 ENV CONFIG_DIR=/config \
     QBT_SAVE_PATH=/downloads \
@@ -61,6 +62,6 @@ ENV CONFIG_DIR=/config \
 
 HEALTHCHECK --interval=10s CMD chmod +x $(which healthcheck.sh) && healthcheck.sh
 
-EXPOSE 8080
+EXPOSE 8080 6789
 
 ENTRYPOINT ["/init"]
